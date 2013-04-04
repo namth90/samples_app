@@ -10,12 +10,15 @@
 #
 
 class User < ActiveRecord::Base
-  attr_accessible :email, :name, :password, :password_confirmation
+  attr_accessible :email, :name, :login, :password, 
+  :password_confirmation, :password_reset_token,
+  :password_reset_send_at
 # binding.pry
   has_secure_password
 
   validates :password, presence: true, :length => { :minimum => 6 }
   validates :password_confirmation, presence: true
+  # validates :password_reset_token, presence: true
 
   validates :name, presence: true, :length => { :maximum => 50}
 
@@ -25,4 +28,24 @@ class User < ActiveRecord::Base
   uniqueness: { case_sensitive: false }
 
   before_save { |user| user.email = email.downcase }
+  # before_save :create_remember_token
+  before_save :create_remember_token
+
+
+def send_password_reset
+  # binding.pry
+      self.password_reset_token = SecureRandom.urlsafe_base64
+      self.password_reset_send_at = Time.zone.now
+      save!(:validate => false)
+      UserMailer.password_reset(self).deliver
+end
+
+private
+
+def create_remember_token
+	self.remember_token = SecureRandom.urlsafe_base64
+end
+
+
+
 end

@@ -11,14 +11,32 @@ class UsersController < ApplicationController
   def create
   	binding.pry
   	@user = User.new(params[:user])
+    @user.login = SecureRandom.urlsafe_base64
   	if @user.save
-  		# Handle a successful save.
-  		# redirect_to user_path(@user)
-  		flash[:success] = "Wellcom to the Sample App!"
-  		redirect_to @user
+      UserMailer.welcome_email(@user).deliver
+      sign_in @user
+  		flash[:success] = "Please you active account!"
+  		redirect_to signin_path 
   	else
-      flash[:error] = "Errors!!!"
+      flash.now[:error] = "error"
   		render 'new'
   	end
+  end
+
+  def active
+    binding.pry
+    @user = User.find(params[:id])
+    if @user.login == params[:active_code]
+      if @user.status != true
+        @user.update_attribute(:status,true)
+        flash[:success] = "You active account success!"
+        redirect_to signin_path
+      else
+        redirect_to signin_path
+      end
+    else
+      flash[:error] = "error!!!"
+      render signin_path
+    end
   end
 end

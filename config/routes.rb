@@ -1,6 +1,8 @@
 SamplesApp::Application.routes.draw do
   # get "users/new"
   resources :users
+  resources :sessions, only: [:new,:create,:destroy]
+  resources :password_resets, only: [:new,:edit,:update,:create]
 
   root :to => 'static_pages#home'
   # get "static_pages/home"
@@ -15,6 +17,14 @@ SamplesApp::Application.routes.draw do
   match '/about', to:  'static_pages#about'
   match '/contact' => "static_pages#contact"
   match '/signup' => "users#new"
+  match '/signin' => "sessions#new"
+  match '/signout', to: 'sessions#destroy', via: :delete
+
+  match 'active' => "users#active"
+
+  match 'reset_password' => "users#reset_password"
+
+  match 'reset_password' => "users#create_password", via: :POST
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
