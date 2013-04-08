@@ -14,7 +14,7 @@ class PasswordResetsController < ApplicationController
 		if @user
 			@user.send_password_reset			
 			# redirect_to edit_password_reset_path
-			flash.now[:notice] = "Please you email reset password!!!"
+			flash[:notice] = "Please you email reset password!!!"
 			redirect_to signin_path
 		else
 			flash.now[:notice] = "No account was found with that email address!!!"

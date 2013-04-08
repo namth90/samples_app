@@ -4,7 +4,7 @@ class SessionsController < ApplicationController
 	end
 
 	def create
-		binding.pry
+		# binding.pry
 		user = User.find_by_email(params[:session][:email].downcase)
 		if user && user.authenticate(params[:session][:password])
 			if user.status != true			
@@ -13,7 +13,8 @@ class SessionsController < ApplicationController
 			else
 				flash[:success] = "Account active and Sign in Success!!!"
 				sign_in user
-				redirect_to user
+				# redirect_to user
+				redirect_back_or user
 			end
 		else
 			flash.now[:error] = "Invalid email or password ?"

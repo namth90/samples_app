@@ -12,7 +12,7 @@
 class User < ActiveRecord::Base
   attr_accessible :email, :name, :login, :password, 
   :password_confirmation, :password_reset_token,
-  :password_reset_send_at
+  :password_reset_send_at, :admin
 # binding.pry
   has_secure_password
 
