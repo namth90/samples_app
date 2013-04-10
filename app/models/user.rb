@@ -13,6 +13,8 @@ class User < ActiveRecord::Base
   attr_accessible :email, :name, :login, :password, 
   :password_confirmation, :password_reset_token,
   :password_reset_send_at, :admin
+
+  has_many :microposts, dependent: :destroy
 # binding.pry
   has_secure_password
 
@@ -30,6 +32,10 @@ class User < ActiveRecord::Base
   before_save { |user| user.email = email.downcase }
   # before_save :create_remember_token
   before_save :create_remember_token
+
+  def feed
+    Micropost.where("user_id = ?", id)
+  end
 
 
 def send_password_reset

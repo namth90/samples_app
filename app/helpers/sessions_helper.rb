@@ -38,6 +38,16 @@ module SessionsHelper
     # binding.pry
     session[:return_to] = request.url
   end
+
+  def sign_in_user
+    # binding.pry
+    # redirect_to signin_url, notice:"Please sign in." unless signed_in?
+    if !signed_in?
+      store_location
+      flash[:notice] = "Please sign in."
+      redirect_to signin_path
+    end    
+  end
 end
 
 
